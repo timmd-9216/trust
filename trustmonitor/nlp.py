@@ -405,9 +405,6 @@ class NLP:
             #     metrics_df[article.index][metric['name']] = metric['value']
         corpus._add_metrics_to_catalog()
 
-        
-                
-
     def _build_frontend_json(self, corpus):
         """
         Estructura del json:
@@ -476,6 +473,8 @@ class NLP:
         """
         for article in tqdm(corpus.articles.values(), desc="Building frontend json"):
             article.nlp_annotations.json = {}
+
+            article.nlp_annotations.json['id'] = article.get_article_dict()['id']
 
             # Entities
             entities = article.nlp_annotations.entities['stanza']
@@ -565,7 +564,9 @@ class NLP:
         # Save JSON to file if file_name is provided
         if file_name:
             with open(file_name, 'w', encoding='utf-8') as f:
-                out_json = []
+                out_json = {}
                 for article in tqdm(corpus.articles.values()):
-                    out_json.append(article.nlp_annotations.json)
+                    if 'id' not in article.get_article_dict().keys():
+                        print('Each article requires an id')
+                    out_json[article.get_article_dict()['id']]  = article.nlp_annotations.json
                 json.dump(out_json, f, ensure_ascii=False, indent=4)
