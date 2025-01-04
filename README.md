@@ -77,3 +77,6 @@ entity_sentiments = nlp.extract_entity_sentiments(doc)
 |-- setup.py
 |-- README.md
 ```
+
+## Output Response 
+[see doc.](./Trust_API_Anotacion_Noticias_Documentacion.pdf)
