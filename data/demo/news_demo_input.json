@@ -1,4 +1,5 @@
  [   {
+        "id": "noti1203",
         "hora": "", 
         "link_noticia": "", 
         "link_foto": "", 
@@ -13,6 +14,7 @@
         "resumen": "",
         "medio": "Ministerio Capital Humano"
     },    {
+        "id":"noti1204",
         "hora": "", 
         "link_noticia": "https://www.lanacion.com.ar/agencias/x-incorporara-los-pagos-en-2024-e-implementara-la-ia-para-la-experiencia-de-usuarios-y-anunciantes-nid09012024/", 
         "link_foto": "", 
@@ -30,6 +32,7 @@
         ,
 
     {
+        "id":"noti1205",
         "hora": "", 
         "link_noticia": "https://www.infobae.com/economia/2024/01/18/alquileres-la-oferta-portena-crecio-un-25-en-pocos-dias-y-aparecieron-departamentos-en-barrios-donde-no-habia-opciones/", 
         "link_foto": "", 
@@ -45,7 +48,8 @@
         "medio": "infobae"
     },
     {
-        "hora": "", 
+                "id":"noti1206",
+                "hora": "", 
         "link_noticia": "https://www.pagina12.com.ar/704855-el-infierno-de-alquilar-en-la-era-milei-como-son-los-contrat", 
         "link_foto": "", 
         "autor": "Agustín Gulman", 
@@ -60,7 +64,7 @@
         "medio": "pagina12"
     },
     
-    {
+    {   "id":"noti1223",
         "hora": "", 
         "link_noticia": "https://www.clarin.com/economia/alquileres-aumenta-oferta-registran-bajas-20-precios-derogacion-ley_0_ukquOzGAtf.html", 
         "link_foto": "", 
@@ -75,7 +79,7 @@
         "resumen": "Para el titular de la Cámara de Propietarios, Enrique Abatti, actualmente se encuentran \"7.000 propiedades en oferta\", mientras semanas atrás era \"cero\".",
         "medio": "clarin"
     },
-    {
+{         "id":"noti1270",
         "hora": "", 
         "link_noticia": "https://www.lanacion.com.ar/editoriales/cuasimonedas-para-cubrir-derroches-nid20012024/", 
         "link_foto": "", 

@@ -8,6 +8,7 @@ Our goal is to develop a prototype that uses AI to identify specific quality ind
   - [Installation](#installation)
   - [Usage](#usage)
   - [Project Structure](#project-structure)
+  - [Output Response](#output-response)
 
 ## Installation
 1. Clone the Repository
@@ -78,5 +79,5 @@ entity_sentiments = nlp.extract_entity_sentiments(doc)
 |-- README.md
 ```
 
-## Output Response
-[see doc](./Trust_API_Anotacion_Noticias_Documentacion.pdf)
+## Output Response 
+[see doc.](./Trust_API_Anotacion_Noticias_Documentacion.pdf)
