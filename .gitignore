@@ -160,6 +160,7 @@ cython_debug/
 #.idea/
 
 notebooks/
+htmls/
 
 # Pickle files
 *.pkl
