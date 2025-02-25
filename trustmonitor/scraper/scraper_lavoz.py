@@ -72,14 +72,16 @@ def download_htmls_from_links(links: list, output_dir: str) -> None:
     """
     Esta función permite descargar los archivos HTML de las noticias a partir de los enlaces proporcionados.
     El único objetivo es realizar el request una única vez y obtener los archivos completos, para probar y evaluar el scrapping.
+    
+    
 
     Args:
         links (set): Links a scrapear.
         output_dir (str): Directorio de salida para guardar los archivos HTML y el json.
     """
     
-    if not os.path.exists(f"{output_dir}/htmls"):
-        os.makedirs(f"{output_dir}/htmls")
+    if not os.path.exists(f"{output_dir}/html_files"):
+        os.makedirs(f"{output_dir}/html_files")
     
     urls_list = []
     i = 0
@@ -105,9 +107,15 @@ def download_htmls_from_links(links: list, output_dir: str) -> None:
         i += 1
         time.sleep(3)
         
-        with open(f"{output_dir}/urls_files_list.json", "w") as file:
+        with open(f"{output_dir}/htmls/urls_files_list.json", "w") as file:
             json.dump(urls_list, file, indent=4)
 
+
+
+def read_html(filepath: str) -> str:
+    with open(filepath, "r", encoding="utf-8") as file:
+        html_content = file.read()
+    return html_content
 
 
 def get_scraped_data_noticia(link: str, html_file: Optional[str]) -> dict | None:
@@ -126,8 +134,9 @@ def get_scraped_data_noticia(link: str, html_file: Optional[str]) -> dict | None
     
     if html_file:
         # Si se pasa un archivo HTML, lo abre y parsea.
-        with open(html_file, 'r', encoding='utf8') as f:
-            soup = BeautifulSoup(f, 'html.parser')
+        content = read_html(html_file)        
+        soup = BeautifulSoup(content, 'html.parser')
+        
     else:
         # Realiza la solicitud GET a la URL de la noticia y parsea el contenido HTML.
         soup = BeautifulSoup(requests.get(link).content, 'html.parser')
@@ -175,10 +184,12 @@ def get_scraped_data_noticia(link: str, html_file: Optional[str]) -> dict | None
             ):
                 pass
             else:
-                print('Elemento no reconocido:')
-                print(link)
-                print(elemento.name)
-                print(elemento.text)
+                # print('Elemento no reconocido:')
+                # print(link)
+                # print(elemento.name)
+                # print(elemento.text)
+                # print("---------")
+                pass
     
         return data_noticia
 
@@ -193,6 +204,7 @@ def postprocess_scraped_data(data: list[dict]) -> list[dict]:
     - Agrega id.
     - Agrega index.
     - Normaliza la fecha y hora.
+    - Elimina caracteres raros.
 
     Args:
         data (list[dict]): _description_
@@ -206,11 +218,13 @@ def postprocess_scraped_data(data: list[dict]) -> list[dict]:
         article["index"] = i
         article["fecha"], article["hora"] = article["fecha_hora"].split(",")
         article["fecha"] = _transform_date(article["fecha"])
+        article["cuerpo"] = article["cuerpo"].replace('\u002E', '').replace('\u0007', '')
+        article["cuerpo_raw_html"] = article["cuerpo"].replace('\u002E', '').replace('\u0007', '')
         
     return data
         
         
-def save_data(data: list[dict], output_file: str) -> None:
+def save_json(data: list[dict], output_file: str) -> None:
     """
     Guarda los datos de las noticias en un archivo JSON.
     """
@@ -219,7 +233,49 @@ def save_data(data: list[dict], output_file: str) -> None:
         json.dump(data, f, ensure_ascii=False)
  
  
- #def scraping_pipeline_lavoz(output_file: str) -> None:
+def scraping_pipeline_lavoz_urls(links: list[str], output_file: str) -> None:
+    """
+    Genera el pipeline completo de scrapeo de datos a partir de un archivo txt con links a scrapear.
+    En este pipeline se realiza el request para obtener los datos. 
+
+    Args:
+        output_file (str): Path del archivo de salida.
+    """
+    pass
+    
+    
+    
+def scraping_pipeline_lavoz_htmls(html_json_file: str, 
+                                  htmls_dir: str,
+                                  output_file: str) -> None:
+    """
+    Esta función realiza el pipeline completo de scrapeo de datos a partir de los archivos HTML previamente descargados.
+    En este pipeline se lee el archivo JSON con los links y los archivos HTML, y se extraen los datos de las noticias.
+    Realiza el postprocesamiento de los datos y los guarda en un archivo JSON.
+
+    Args:
+        html_json_file (str): Link al archivo JSON con los links y los archivos HTML (generado al correr la función de descarga de htmls).
+        htmls_dir (str): Directorio donde se encuentran los archivos HTML.
+        output_file (str): Path del archivo de salida.
+    """
+    
+    with open(html_json_file, 'r', encoding='utf8') as f:
+        urls = json.load(f)
+
+    corpus = []
+
+    for url in tqdm(urls):
+        html_file = f'{htmls_dir}/{url["filename"]}'
+        link = url["url"]
+        article = get_scraped_data_noticia(link, html_file)  
+        if article:
+            corpus.append(article)
+        
+    corpus = postprocess_scraped_data(corpus)
+    save_json(corpus, output_file)
+    
+    
+    
      
      
     
@@ -253,7 +309,19 @@ if __name__ == "__main__":
     
     # print(scraped_data)
     
-    # TODO Cambiar rutas por relativas del proyecto desde root.
-    urls = get_links_noticias_from_txt(r"C:\Users\jcc\JuanCruz\repositorios-activos\timmd\trust\notebooks\htmls\urls.txt")
-    print(urls)
-    download_htmls_from_links(urls, r"C:\Users\jcc\OneDrive\Escritorio\prueba")
+    # # TODO Cambiar rutas por relativas del proyecto desde root.
+    # urls = get_links_noticias_from_txt("data/scraper/raw/urls_04FEB25.txt")
+    # print(urls)
+    # download_htmls_from_links(urls, "data/scraper")
+    
+    # url = "https://www.lavoz.com.ar/deportes/futbol/un-belgrano-joven-termino-decepcionando-en-el-0-1-ante-lanus-en-alberdi/"
+    # r = requests.get(url)
+    # soup = BeautifulSoup(r.content.decode("utf-8"), 'html.parser')
+    # print(soup)
+    
+    json_html_file = "data/scraper/htmls/urls_files_list_04FEB25.json"
+    
+    # with open(json_html_file, 'r', encoding='utf8') as f:
+    #     urls = json.load(f)
+    
+    scraping_pipeline_lavoz_htmls(json_html_file, "data/scraper", "data/scraper/lavoz_raw_24FEB25.json")
