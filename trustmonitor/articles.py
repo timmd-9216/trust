@@ -1,12 +1,11 @@
-import pandas as pd
-from tqdm import tqdm
-from spacy import displacy
+import json
 #from dataclasses import dataclass
 import pickle
-import json
 import warnings
 
-
+import pandas as pd
+from spacy import displacy
+from tqdm import tqdm
 
 # @dataclass
 # class NLPAnnotations():
@@ -417,7 +416,7 @@ class ArticlesCorpus():
         df = (pd.DataFrame(news_list)
               # Agregamos variables relevantes y damos formatos correctos.
               .assign(index_article = index_list,
-                      fecha = lambda x: pd.to_datetime(x.fecha, format='%d/%m/%Y'),
+                      fecha = lambda x: pd.to_datetime(x.fecha, format='%d-%m-%Y'),
                       # limpiamos los nombres de autores de las categorias.
               #        categorias = lambda x: x.apply(lambda y: [i for i in y.categorias if i not in y.autor], axis=1))
               #.assign(categorias = lambda x: x.categorias.apply(lambda y: '_'.join(y)),
