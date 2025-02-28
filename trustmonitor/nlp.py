@@ -307,7 +307,7 @@ class NLP:
 
             #!! Mejorar este split para que no incluya \n (limpieza de las sentences).
             sentences = article.cuerpo.split('.')
-            sentences = [s.removeprefix("\n").removesuffix("\n") for s in sentences if s != "\n"]
+            sentences = [s..removeprefix("\n").removesuffix("\n") for s in sentences if s != "\n"]
             
             for sentence in sentences:
                 analysis_result = self.pysentimiento.predict(sentence)
