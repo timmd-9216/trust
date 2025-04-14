@@ -1,12 +1,14 @@
 # nlp_base.py
+import json
 import re
+
+import pandas as pd
 import spacy
 import stanza
-from tqdm import tqdm
 from pysentimiento import create_analyzer  # Import pysentimiento
+from tqdm import tqdm
+
 from .matcher import SourceMatcher
-import json
-import pandas as pd
 
 MIN_SENT_LENGHT = 10
 
@@ -303,7 +305,10 @@ class NLP:
                 'sentences': []
             }
 
+            #!! Mejorar este split para que no incluya \n (limpieza de las sentences).
             sentences = article.cuerpo.split('.')
+            sentences = [s.removeprefix("\n").removesuffix("\n") for s in sentences if s != "\n"]
+            
             for sentence in sentences:
                 analysis_result = self.pysentimiento.predict(sentence)
                 article.nlp_annotations.sentiment['pysentimiento']['sentences'].append({

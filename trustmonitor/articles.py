@@ -1,12 +1,11 @@
-import pandas as pd
-from tqdm import tqdm
-from spacy import displacy
+import json
 #from dataclasses import dataclass
 import pickle
-import json
 import warnings
 
-
+import pandas as pd
+from spacy import displacy
+from tqdm import tqdm
 
 # @dataclass
 # class NLPAnnotations():
