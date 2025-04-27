@@ -10,7 +10,7 @@ Actualmente este proyecto contiene el *backend* encargado de la ingesta, procesa
 
 # Entidades
 
-[Mapa de Entidades](https://www.notion.so/Mapa-de-Entidades-1e230987e49080dd8cdfede290b68aa4?pvs=21) 
+*ver Mapa de Entidades*
 
 # Adjetivos
 
