@@ -10,25 +10,62 @@ Actualmente este proyecto contiene el *backend* encargado de la ingesta, procesa
 
 # Entidades
 
-*ver Mapa de Entidades*
+El módulo de detección de entidades se encarga de extraer del cuerpo de la noticia las entidades nombradas del artículo. Esto incluye Personas, Organizaciones, Lugares y Entidades Misceláneas.
+
+### Potencial Línea de Continuación - Mapa de Entidades
+
+Posibilidad de generar un mapa de las entidades presentes en un corpus de artículos. Cada entidad podría estar asociada a los artículos en los que aparece, a qué otras entidades aparecen con ella, qué sentimiento tiene vinculado, en qué calidad aparece en el artículo (mencionado en citas o como referenciado).
+
+Esta línea puede estar asociada a una base de datos curada de entidades relevantes, que permitan avanzar en un postprocesamiento de **unificación de entidades**. Esta base de datos puede estar vinculada con información extraída automáticamente de wikipedia. 
+
+Otro paso sería vincular la entidades relevantes mediante un mapa pero utilizando los artículos de wikipedia en vez del corpus de noticias, de manera que se puedan encontrar nuevas relaciones de entidades.
 
 # Adjetivos
 
+La detección de adjetivos en el texto busca identificar calificativos que puedan modificar sustantivos importantes en la construcción narrativa de la noticia. El análisis de adjetivos proporciona una capa adicional de interpretación sobre el tono y la subjetividad de la redacción.
+
+### Potencial Línea de Continuación
+
+- Clasificación más específica de los tipos de adjetivos detectados.
+
 # Sentimiento
+
+Este módulo es el encargado de realizar un análisis automático del sentimiento presente en el texto de la noticia. Utiliza modelos de clasificación para determinar la polaridad general (positiva, negativa o neutra) del artículo completo.
+
+### Potencial Línea de Continuación
+
+- Nuevas componentes o métricas a partir agregar el resultado del análisis de sentimiento de cada una de las oraciones del texto por separado.
+- Nuevas componentes o métricas a partir agregar el resultado del análisis de sentimiento de cada párrafo del texto por separado.
+- Análisis focalizado del sentimiento asociado a segmentos específicos del texto, como oraciones o párrafos, para detectar cambios de tono o énfasis emocional en diferentes partes del artículo.
+- Investigar la utilidad de una medida de concordancia entre los sentimientos para transmitir confianza (grado de coherencia entre el sentimiento del título, cuerpo, oraciones, párrafo).
+- Profundizar sentimientos asociados a entidades de la noticia.
 
 # Fuentes
 
 Las fuentes periodísticas de una noticia resultan un importante indicador a la hora de determinar la solidez de la información transmitida en un artículo. Es por eso que Trust contiene un módulo específico para el uso de las detecciones previas para la construcción de detecciones automáticas de citas en el texto procesado.
 
-El método utilizado
+El método utilizado por Trust incorpora las detecciones de Entidades, Estructura del Texto (POS) y patrones generales para detectar citas directas o explícitas. Las mismas tienen como condición la presencia de comillas que definan la afirmación.
 
-# Scraper
+> “No hay una prioridad de un torneo sobre otro. Solamente pensamos en Vélez. El torneo local no lo podemos descuidar. Cuando llegue el momento de los Libertadores lo veremos de la mejor manera” sostuvo Rodríguez.
+> 
 
-# Input Raw
+Además de la afirmación, son detectados el conector y el referenciado de la cita.
 
-- Del scrapper
+### Potencial Línea de Continuación
+
+Investigar las posibilidades de detección de citas indirectas o implícitas, como sería la siguiente estructura que contiene una transformación de la cita del ejemplo anterior.
+
+> Rodríguez sostiene que no hay una prioridad de un torneo sobre otro y que únicamente piensa en Vélez.
+> 
+
+Algunas posibilidades para avanzar en esta línea:
+
+- Generación de base de datos de verbos utilizados en citas directas y que generalmente están incluidos en citas indirectas.
+- Uso de *LLMs* para detección de citas indirectas.
 
 # Input
+
+El siguiente es un ejemplo del input que se está utilizando en el modelo para el procesamiento. Cada noticia contiene los componentes link, sección, título, cuerpo, autor, id, fecha, entre otros.
 
 ```json
 [
@@ -338,6 +375,8 @@ Podemos ver un ejemplo del output completo para una noticia.
 
 ## Entidades
 
+El componente de entidades del output incluye una lista de las mismas con su ubicación en el texto y una lista de sus frecuencias en el artículo.
+
 ```json
 "entities": {
     "entities_list": [
@@ -378,6 +417,8 @@ Podemos ver un ejemplo del output completo para una noticia.
 
 ## Adjetivos
 
+El componente de adjetivos del output incluye una lista de los mismos con su ubicación en el texto y una lista de sus frecuencias en el artículo.
+
 ```json
 "adjectives": {
     "adjectives_list": [
@@ -416,7 +457,7 @@ Podemos ver un ejemplo del output completo para una noticia.
 
 ## Sentimiento
 
-Para el sentimiento tenemos las siguientes métricas:
+Las detecciones del sentimiento incluyen el sentimiento global del artículo, el sentimiento del título y las oraciones de la nota con mayor puntación en cada una de las 3 clases posibles para el sentimiento (POS, NEU, NEG).
 
 ```json
 "sentiment": {
@@ -457,6 +498,8 @@ Para el sentimiento tenemos las siguientes métricas:
 
 ## Fuentes
 
+Estructura de la detección de fuentes del artículo. Actualmente citas directas detectadas.
+
 ```json
 "sources": [
 	    {
@@ -492,6 +535,14 @@ Para el sentimiento tenemos las siguientes métricas:
 ```
 
 ## Métricas
+
+Conjunto de métricas generadas a partir de las detecciones del modelo. Se categorizan en los subgrupos:
+
+- general
+- entities
+- sentiment
+- adjectives
+- sources
 
 ```json
 "metrics": {
@@ -643,9 +694,9 @@ Una posibilidad como línea de investigación para el proyecto puede ser la inte
 
 - Resumen de la nota.
 - Consultas usando lenguaje natural sobre el texto del artículo.
-- Análisis de cualquiera de los componentes detectados actualmente
+- Análisis alternativo de cualquiera de los componentes detectados actualmente.
 - Análisis de tendencias o coherencia.
 
 ## Visualizaciones
 
-## Mapa de Entidades
+Entrega desde el *backend* visualizaciones con referencias (a partir del corpus de noticias) para representar y comparar gráficamente un artículo en el conjunto (por ejemplo dentro de su sección).
