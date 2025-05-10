@@ -7,8 +7,68 @@ El proyecto Trust se desarrolla en búsqueda de una herramienta de asistencia pa
 Esto se logra realizando un análisis automático de los componentes del artículo periodístico aplicando técnicas de procesamiento de lenguaje natural (NLP) para la extracción de *features* de sus componentes y la construcción de métricas que representan la calidad periodística estimada por el modelo.
 
 Actualmente este proyecto contiene el *backend* encargado de la ingesta, procesamiento y entrega de una o más noticias recibidas.
+# Procesamiento de Artículos
 
-# Entidades
+Actualmente la aplicación desarrollada permite el procesamiento de uno o más artículos, permitiendo la extracción de atributos de sus elementos mediante el uso de modelos de procesamiento de lenguaje natural pre-entrenados. 
+
+El servicio está desarrollado en Python utilizando Flask y contiene un único *endpoint* que recibe el/los artículo/s, realiza el procesamiento y devuelve el resultado en formato *json*. 
+
+Por el momento la herramienta utiliza 3 motores para el análisis de textos:
+
+- Stanza
+- Spacy
+- Pysentimiento
+
+## Stanza
+
+Es una librería de procesamiento de lenguaje natural desarrollada por el Stanford NLP Group. Está diseñada para ser fácil de usar y altamente precisa, ofreciendo modelos preentrenados para muchos idiomas. Entre sus funciones se pueden destacar:
+
+- Tokenización
+- Lematización
+- Análisis morfosintáctico (POS tagging)
+- Reconocimiento de entidades nombradas (NER)
+- Análisis de dependencias gramaticales
+- Segmentación de oraciones
+
+Stanza se destaca por su arquitectura modular, basada en redes neuronales profundas, y su compatibilidad con los datos multilingües.
+
+https://stanfordnlp.github.io/stanza/
+
+## Spacy
+
+Es una librería de procesamiento de lenguaje natural en Python, diseñada para ser rápida, robusta y orientada a aplicaciones de producción. Ofrece modelos preentrenados para múltiples idiomas y permite realizar tareas clave de NLP con gran eficiencia.
+
+Algunas de sus características principales incluyen:
+
+- Tokenización
+- Lematización
+- Análisis morfosintáctico (POS tagging)
+- Reconocimiento de entidades nombradas (NER)
+- Análisis de dependencias gramaticales
+- Vectorización de palabras con modelos de embeddings
+
+Esta librería está optimizada para velocidad y escalabilidad en aplicaciones reales, no solo para investigación.
+
+https://spacy.io/
+
+## Pysentimiento
+
+Es una librería de Python diseñada para análisis de sentimiento y detección de emociones en textos, especialmente en español y otros idiomas. Está construida sobre modelos preentrenados de *Transformers* (como BERT y RoBERTa), facilitando el uso de modelos de clasificación de texto sin necesidad de configurar arquitecturas complejas.
+
+Sus características principales incluyen:
+
+- Análisis de sentimiento (positivo, negativo, neutro)
+- Detección de emociones (alegría, tristeza, enojo, etc.)
+- Detección de odio (*hate speech detection*)
+- Modelos disponibles para varios idiomas, principalmente español, inglés y portugués
+
+https://github.com/pysentimiento/pysentimiento
+
+# Detecciones
+
+A partir del uso en conjunto de las herramientas que proveen las librerías previamente mencionadas, sumado a desarrollos propios y heurísticas, Trust realiza y organiza múltiples detecciones sobre el/los articulo/s recibidos.
+
+## Entidades
 
 El módulo de detección de entidades se encarga de extraer del cuerpo de la noticia las entidades nombradas del artículo. Esto incluye Personas, Organizaciones, Lugares y Entidades Misceláneas.
 
@@ -20,7 +80,7 @@ Esta línea puede estar asociada a una base de datos curada de entidades relevan
 
 Otro paso sería vincular la entidades relevantes mediante un mapa pero utilizando los artículos de wikipedia en vez del corpus de noticias, de manera que se puedan encontrar nuevas relaciones de entidades.
 
-# Adjetivos
+## Adjetivos
 
 La detección de adjetivos en el texto busca identificar calificativos que puedan modificar sustantivos importantes en la construcción narrativa de la noticia. El análisis de adjetivos proporciona una capa adicional de interpretación sobre el tono y la subjetividad de la redacción.
 
@@ -28,7 +88,7 @@ La detección de adjetivos en el texto busca identificar calificativos que pueda
 
 - Clasificación más específica de los tipos de adjetivos detectados.
 
-# Sentimiento
+## Sentimiento
 
 Este módulo es el encargado de realizar un análisis automático del sentimiento presente en el texto de la noticia. Utiliza modelos de clasificación para determinar la polaridad general (positiva, negativa o neutra) del artículo completo.
 
@@ -40,7 +100,7 @@ Este módulo es el encargado de realizar un análisis automático del sentimient
 - Investigar la utilidad de una medida de concordancia entre los sentimientos para transmitir confianza (grado de coherencia entre el sentimiento del título, cuerpo, oraciones, párrafo).
 - Profundizar sentimientos asociados a entidades de la noticia.
 
-# Fuentes
+## Fuentes
 
 Las fuentes periodísticas de una noticia resultan un importante indicador a la hora de determinar la solidez de la información transmitida en un artículo. Es por eso que Trust contiene un módulo específico para el uso de las detecciones previas para la construcción de detecciones automáticas de citas en el texto procesado.
 
@@ -696,6 +756,17 @@ Una posibilidad como línea de investigación para el proyecto puede ser la inte
 - Consultas usando lenguaje natural sobre el texto del artículo.
 - Análisis alternativo de cualquiera de los componentes detectados actualmente.
 - Análisis de tendencias o coherencia.
+
+## Mayor análisis con Pysentimiento
+
+Incorporar más tasks disponibles con pysentimiento:
+
+- Hate Speech Detection
+- Irony Detection
+- Emotion Analysis
+- Contextualized Hate Speech Detection
+
+Incluso se podría probar su versión de NER y POS tagging y el Targeted Sentiment Analysis.
 
 ## Visualizaciones
 
